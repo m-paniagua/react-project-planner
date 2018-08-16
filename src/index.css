@@ -1,0 +1,171 @@
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+input {
+  border: 1px solid #E0E0E0;
+  border-radius: 10px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+textarea:focus, input:focus {
+  outline: none;
+  border: 1px solid #5bc0de;
+  /* border-radius: 10px; */
+}
+
+.full-width-input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+hr {
+  margin: 0;
+}
+
+.button {
+  padding: 10px;
+  background: #76dc76;
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: inherit;
+  cursor: pointer
+}
+
+button:focus {
+  outline: 0;
+}
+
+.button:hover {
+  background: #39CC39;
+}
+
+.button-default {
+  background: #428bca;
+  color: #fff;
+}
+
+.button-default:hover {
+  background: #2A6496;
+}
+
+/* layout */
+
+.main-content {
+  /* background-color: #f2f2f2; */
+  background: url(./img/doodles.png);
+  width: 100%;
+  min-height: 100vh;
+  /* padding-top: 20px; */
+}
+
+/* TaskList */
+
+.new-task-form {
+  margin-bottom: 10px;
+}
+
+.tasks {
+  margin: 0 auto;
+  max-width: 980px;
+}
+
+.tasks>.task-header {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, .8), rgba(255, 255, 255, .4));
+  /* font-size: 18px; */
+  margin-bottom: 10px;
+}
+
+.task-header h1 {
+  font-size: 60px;
+  font-weight: 900;
+}
+
+/* Task */
+
+.task {
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+  min-height: 200px;
+  position: relative;
+}
+
+.task-header {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-header>div {
+  font-weight: bold;
+}
+
+.task .task-header {
+  background: #eee;
+}
+
+.task-body {
+  padding: 10px 20px;
+  min-height: 60px;
+}
+
+.task-lists {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-list {
+  width: 300px;
+}
+
+.task-list-title {
+  margin-bottom: 10px;
+}
+
+.tasks­header {
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+}
+
+.del-button {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  background: #d9534f;
+  color: #fff;
+}
+
+.del-button:hover {
+  background: #B52B27;
+}
+
+.tasks-loading {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+textarea {
+  border: none;
+}
