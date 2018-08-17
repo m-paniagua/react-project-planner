@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TaskList from './TaskList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import Header from './Header'
 
 class TasksPage extends Component {
     constructor(props) {
@@ -26,6 +27,10 @@ class TasksPage extends Component {
     onSearch = e => {
         this.props.onSearch(e.target.value)
     }
+
+    // onCurrentProjectChange = e => {
+    //     this.props.onCurrentProjectChange(e)
+    // }
 
     // clear form fields
     resetForm() {
@@ -121,6 +126,10 @@ class TasksPage extends Component {
                         </button>
                     </form>
                 )}
+                <Header
+                    projects={this.props.projects}
+                    onCurrentProjectChange={this.props.onCurrentProjectChange}
+                />
 
                 <div className="task-lists">
                     {this.renderTasksList()}

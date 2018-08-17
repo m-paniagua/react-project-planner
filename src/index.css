@@ -166,6 +166,6 @@ button:focus {
   align-items: center;
 }
 
-textarea {
-  border: none;
+.project-item {
+  margin: 20px 0;
 }

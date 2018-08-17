@@ -1,4 +1,14 @@
 {
+  "projects": [
+    {
+      "id": 1,
+      "name": "Short­Term Goals"
+    },
+    {
+      "id": 2,
+      "name": "Long­Term Goals"
+    }
+  ],
   "tasks": [
     {
       "title": "Add Search Bar",
