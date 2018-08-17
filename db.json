@@ -39,39 +39,11 @@
       "projectId": 2
     },
     {
-      "title": "Add Projects",
-      "description": "Add the ability to add projects",
-      "status": "Not Started",
-      "id": 11,
-      "projectId": 1
-    },
-    {
-      "title": "Edit Notes",
-      "description": "Add the ability to edit individual tasks",
-      "status": "Not Started",
-      "id": 12,
-      "projectId": 1
-    },
-    {
-      "title": "Update Database",
-      "description": "Add projects and update tasks",
-      "status": "Not Started",
-      "id": 13,
-      "projectId": 1
-    },
-    {
-      "title": "fetchProjects",
-      "description": "Create action creator to fetch projects on page load",
-      "status": "Not Started",
-      "id": 14,
-      "projectId": 1
-    },
-    {
-      "title": "Projects Reducer",
-      "description": "Create projects reducer",
-      "status": "Not Started",
-      "id": 15,
-      "projectId": 1
+      "title": "Add editing",
+      "description": "Allow notes to be edited",
+      "status": "Completed",
+      "projectId": 2,
+      "id": 10
     }
   ]
 }

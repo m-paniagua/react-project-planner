@@ -122,7 +122,10 @@ export function editTaskSucceeded(task) {
 // change task of given id
 export function editTask(id, params = {}) {
     return (dispatch, getState) => {
-        const task = getTaskById(getState().tasks.tasks, id)
+        // need current project id
+        const projectId = getState().page.currentProjectId
+
+        const task = getTaskById(getState().tasks.items, id, projectId)
         const updatedTask = { ...task, ...params }
 
         api.editTask(id, updatedTask).then(resp => {
@@ -166,6 +169,11 @@ export function setCurrentProjectId(id) {
     }
 }
 
-function getTaskById(tasks, id) {
-    return tasks.find(task => task.id === id)
+function getTaskById(projects, id, pId) {
+    // find index of current project
+    const projectIndex = projects.findIndex(
+        project => project.id === pId
+    )
+    // return the task from array matches id
+    return projects[projectIndex].tasks.find(task => task.id === id)
 }

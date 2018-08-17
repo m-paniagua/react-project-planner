@@ -51,20 +51,20 @@ export function projectsReducer(state = initialProjectsState, action) {
         //     return { tasks: [...state.tasks, action.payload] }
 
         // edit property of task that matches id
-        case 'EDIT_TASK':
-            return {
-                // iterate through array of tasks
-                tasks: state.tasks.map(task => {
-                    // if task's id matches
-                    if (task.id === action.payload.id) {
-                        // return task with updated property
-                        return { ...task, ...action.payload.params }
-                    }
+        // case 'EDIT_TASK':
+        //     return {
+        //         // iterate through array of tasks
+        //         tasks: state.tasks.map(task => {
+        //             // if task's id matches
+        //             if (task.id === action.payload.id) {
+        //                 // return task with updated property
+        //                 return { ...task, ...action.payload.params }
+        //             }
 
-                    // if id does not match return unmodified task
-                    return task
-                })
-            }
+        //             // if id does not match return unmodified task
+        //             return task
+        //         })
+        //     }
 
         // add newly created task to store
         case 'CREATE_TASK_SUCCEEDED':
@@ -96,17 +96,33 @@ export function projectsReducer(state = initialProjectsState, action) {
             }
 
         // return updated list of tasks
-        case 'EDIT_TASK_SUCCEEDED':
-            const nextTasks = state.tasks.map(task => {
-                if (task.id === action.payload.task.id) {
-                    return action.payload.task
-                }
-                return task
-            })
+        case 'EDIT_TASK_SUCCEEDED': {
+            const { task } = action.payload
+            const projectIndex = state.items.findIndex(
+                project => project.id === task.projectId
+            )
+            const project = state.items[projectIndex]
+            const taskIndex = project.tasks.findIndex(
+                t => t.id === task.id
+            )
+            const nextProject = {
+                ...project,
+                tasks: [
+                    ...project.tasks.slice(0, taskIndex),
+                    task,
+                    ...project.tasks.slice(taskIndex + 1)
+                ]
+            }
+
             return {
                 ...state,
-                tasks: nextTasks
+                items: [
+                    ...state.items.slice(0, projectIndex),
+                    nextProject,
+                    ...state.items.slice(projectIndex + 1)
+                ]
             }
+        }
 
         case 'FILTER_TASKS':
             return {
