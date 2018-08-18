@@ -25,8 +25,8 @@ export function editTask(id, params) {
 }
 
 // function to delete task
-export function deleteTask(id) {
-    return axios.delete(`${API_BASE_URL}/tasks/${id}`)
+export function deleteTask(task) {
+    return axios.delete(`${API_BASE_URL}/tasks/${task.id}`)
 }
 
 // function to retrieve projects with embeded tasks

@@ -29,8 +29,11 @@ class App extends Component {
     this.props.dispatch(filterTasks(searchTerm))
   }
 
-  onDeleteTask = id => {
-    this.props.dispatch(deleteTask(id))
+  // onDeleteTask = id => {
+  //   this.props.dispatch(deleteTask(id))
+  // }
+  onDeleteTask = task => {
+    this.props.dispatch(deleteTask(task))
   }
 
   onCurrentProjectChange = e => {
@@ -53,6 +56,7 @@ class App extends Component {
             onDeleteTask={this.onDeleteTask}
             projects={this.props.projects}
             onCurrentProjectChange={this.onCurrentProjectChange}
+            currentProjectID={this.props.currentProjectID}
           />
         </div>
       </div>
@@ -69,7 +73,7 @@ function mapStateToProps(state) {
   return {
     tasks: getGroupedAndFilteredTasks(state),
     projects: items,
-    // currentProjectID: state.page.currentProjectID,
+    // currentProjectID: getCurrentProjectId(state),
     isLoading,
     error
   }

@@ -141,11 +141,11 @@ export function filterTasks(searchTerm) {
     }
 }
 
-export function deleteTaskSucceded(id) {
+export function deleteTaskSucceded(task) {
     return {
         type: 'DELETE_TASK_SUCCEEDED',
         payload: {
-            id
+            task
         }
     }
 }

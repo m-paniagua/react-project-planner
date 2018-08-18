@@ -37,7 +37,8 @@ const Task = (props) => {
     }
 
     function onDeleteTask() {
-        props.onDeleteTask(props.task.id)
+        // console.log('delteing task: ', props.task.title)
+        props.onDeleteTask(props.task)
     }
 
 }

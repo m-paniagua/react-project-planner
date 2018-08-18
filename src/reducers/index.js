@@ -98,13 +98,19 @@ export function projectsReducer(state = initialProjectsState, action) {
         // return updated list of tasks
         case 'EDIT_TASK_SUCCEEDED': {
             const { task } = action.payload
+
+            // find index of project containing task
             const projectIndex = state.items.findIndex(
                 project => project.id === task.projectId
             )
             const project = state.items[projectIndex]
+
+            // find index in tasks array
             const taskIndex = project.tasks.findIndex(
                 t => t.id === task.id
             )
+
+            // delete old taks, add edited task to tasks array
             const nextProject = {
                 ...project,
                 tasks: [
@@ -131,14 +137,40 @@ export function projectsReducer(state = initialProjectsState, action) {
             }
 
         // delete task with given id from store
-        case 'DELETE_TASK_SUCCEEDED':
-            const remainingTasks = state.tasks.filter(task => {
-                return task.id !== action.payload.id
-            })
+        case 'DELETE_TASK_SUCCEEDED': {
+            const { task } = action.payload
 
-            return {
-                tasks: remainingTasks
+            // find index of project containing task
+            const projectIndex = state.items.findIndex(
+                project => project.id === task.projectId
+            )
+
+            const project = state.items[projectIndex]
+
+            // get task index
+            const taskIndex = project.tasks.findIndex(
+                t => t.id === task.id
+            )
+
+            // delete task from tasks array
+            const nextProject = {
+                ...project,
+                tasks: [
+                    ...project.tasks.slice(0, taskIndex),
+                    ...project.tasks.slice(taskIndex + 1)
+                ]
             }
+
+            // return items array with updated project
+            return {
+                ...state,
+                items: [
+                    ...state.items.slice(0, projectIndex),
+                    nextProject,
+                    ...state.items.slice(projectIndex + 1)
+                ]
+            }
+        }
 
         default:
             return state
@@ -167,7 +199,6 @@ const getSearchTerm = state => state.page.searchTerm
 export const getFilteredTasks = createSelector(
     [getTasksById, getSearchTerm],
     (tasks, searchTerm) => {
-        // console.log(tasks)
         // return tasks that contain search input
         return tasks.filter(task => task.title.match(new RegExp(searchTerm, 'i')))
     }
@@ -187,7 +218,6 @@ export const getGroupedAndFilteredTasks = createSelector(
 )
 
 const initialPageState = {
-    // currentProjectId: null,
     currentProjectId: null,
     searchTerm: ""
 }
@@ -201,9 +231,10 @@ export function pageReducer(state = initialPageState, action) {
             }
 
         case 'FILTER_TASKS':
+
             return {
                 ...state,
-                searchTerm: action.searchTerm
+                searchTerm: action.payload.searchTerm
             }
 
         default:

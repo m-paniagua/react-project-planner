@@ -11,6 +11,7 @@ class TasksPage extends Component {
             showNewCardForm: false,
             title: '',
             description: '',
+            currenProjectId: null
         }
     }
 
@@ -28,9 +29,10 @@ class TasksPage extends Component {
         this.props.onSearch(e.target.value)
     }
 
-    // onCurrentProjectChange = e => {
-    //     this.props.onCurrentProjectChange(e)
-    // }
+    onCurrentProjectChange = e => {
+        this.setState({ currenProjectId: e.target.value })
+        this.props.onCurrentProjectChange(e)
+    }
 
     // clear form fields
     resetForm() {
@@ -94,13 +96,15 @@ class TasksPage extends Component {
                         onChange={this.onSearch}
                         type="text"
                         placeholder="Search..."
+                        disabled={this.state.currenProjectId ? false : true}
                     />
                     <button
                         className="button button-default"
                         onClick={this.toggleForm}
+                        disabled={this.state.currenProjectId ? false : true}
                     >
                         <FontAwesomeIcon icon={faPlusCircle} /> New
-                    </button>
+                </button>
                 </div>
                 {this.state.showNewCardForm && (
                     <form onSubmit={this.onCreateTask} className="new-task-form">
@@ -128,7 +132,7 @@ class TasksPage extends Component {
                 )}
                 <Header
                     projects={this.props.projects}
-                    onCurrentProjectChange={this.props.onCurrentProjectChange}
+                    onCurrentProjectChange={this.onCurrentProjectChange}
                 />
 
                 <div className="task-lists">

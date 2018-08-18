@@ -44,6 +44,13 @@
       "status": "Completed",
       "projectId": 2,
       "id": 10
+    },
+    {
+      "title": "Delete notes",
+      "description": "Add the ability to delete notes",
+      "status": "Completed",
+      "projectId": 1,
+      "id": 11
     }
   ]
 }
