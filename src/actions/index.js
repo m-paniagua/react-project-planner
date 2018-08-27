@@ -1,11 +1,13 @@
 // import all api methods
 import * as api from '../api'
+import { normalize, schema } from 'normalizr'
 
-// let _id = 1
-// // create id for newly created tasks
-// export function uniqueId() {
-//     return _id++
-// }
+function receiveEntities(entities) {
+    return {
+        type: 'RECEIVE_ENTITIES',
+        payload: entities
+    }
+}
 
 function fetchProjectStarted(boards) {
     return {
@@ -14,12 +16,12 @@ function fetchProjectStarted(boards) {
     }
 }
 
-function fetchProjectSucceeded(projects) {
-    return {
-        type: 'FETCH_PROJECTS_SUCCEEDED',
-        payload: { projects }
-    }
-}
+// function fetchProjectSucceeded(projects) {
+//     return {
+//         type: 'FETCH_PROJECTS_SUCCEEDED',
+//         payload: { projects }
+//     }
+// }
 
 function fetchProjectsFailed(err) {
     return {
@@ -37,8 +39,16 @@ export function fetchProjects() {
         return api.fetchProjects()
             .then(resp => {
                 const projects = resp.data
-                // send response body if success
-                dispatch(fetchProjectSucceeded(projects))
+
+                const normalizedData = normalize(projects, [projectSchema])
+
+                dispatch(receiveEntities(normalizedData))
+
+                // set default project on start
+                // if (!getState().page.currentProjectId) {
+                //     const defaultProjectId = projects[0].id
+                //     dispatch(setCurrentProjectId(defaultProjectId))
+                // }
             })
             .catch(err => {
                 dispatch(fetchProjectsFailed(err))
@@ -177,3 +187,9 @@ function getTaskById(projects, id, pId) {
     // return the task from array matches id
     return projects[projectIndex].tasks.find(task => task.id === id)
 }
+
+// normalizr schema
+const taskSchema = new schema.Entity('tasks')
+const projectSchema = new schema.Entity('projects', {
+    tasks: [taskSchema]
+})

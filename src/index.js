@@ -5,15 +5,15 @@ import App from './App';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
-import { projectsReducer, pageReducer } from './reducers'
+import { projectsReducer, pageReducer, tasksReducer } from './reducers'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import registerServiceWorker from './registerServiceWorker';
 
 const rootReducer = (state = {}, action) => {
     return {
         projects: projectsReducer(state.projects, action),
-        tasks: projectsReducer(state.tasks, action),
-        // tasks: taskssReducer(state.tasks, action),
+        // tasks: projectsReducer(state.tasks, action),
+        tasks: tasksReducer(state.tasks, action),
         page: pageReducer(state.page, action)
     }
 }

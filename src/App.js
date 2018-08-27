@@ -4,7 +4,7 @@ import './App.css';
 import TasksPage from './components/TasksPage';
 import FlashMessage from './components/FlashMessage'
 import { createTask, editTask, filterTasks, deleteTask, fetchProjects, setCurrentProjectId } from './actions'
-import { getGroupedAndFilteredTasks } from './reducers'
+import { getGroupedAndFilteredTasks, getProjects } from './reducers'
 
 class App extends Component {
 
@@ -67,12 +67,12 @@ class App extends Component {
 
 // retrieve tasks from store as props
 function mapStateToProps(state) {
-  const { isLoading, error, items } = state.projects
+  const { isLoading, error } = state.projects
 
 
   return {
     tasks: getGroupedAndFilteredTasks(state),
-    projects: items,
+    projects: getProjects(state),
     // currentProjectID: getCurrentProjectId(state),
     isLoading,
     error

@@ -1,99 +1,43 @@
 import { createSelector } from 'reselect'
 import { TASK_STATUSES } from '../constants'
 
-// define initial state
-const initialProjectsState = {
-    items: [],
+const initialTasksState = {
+    items: {},
     isLoading: false,
-    error: null,
+    error: null
 }
 
-// define how to handle action
-export function projectsReducer(state = initialProjectsState, action) {
-    // check action type
+export function tasksReducer(state = initialTasksState, action) {
     switch (action.type) {
-        case 'FETCH_PROJECTS_STARTED':
-            return {
-                ...state,
-                isLoading: true
+        case 'RECEIVE_ENTITIES': {
+            const { entities } = action.payload
+
+            if (entities && entities.tasks) {
+                return {
+                    ...state,
+                    isLoading: false,
+                    items: entities.tasks
+                }
             }
 
-        case 'FETCH_PROJECTS_SUCCEEDED':
-            return {
-                ...state,
-                items: action.payload.projects,
-                isLoading: false,
-            }
-
-        // return next state with tasks from payload
-        // case 'FETCH_TASKS_SUCCEEDED':
-        //     return {
-        //         ...state,
-        //         isLoading: false,
-        //         tasks: action.payload.tasks,
-        //     }
-
-        // case 'FETCH_TASKS_FAILED':
-        //     return {
-        //         ...state,
-        //         isLoading: false,
-        //         error: action.payload.error
-        //     }
-
-        // case "FETCH_TASKS_STARTED":
-        //     return {
-        //         ...state,
-        //         isLoading: true
-        //     }
+            return state
+        }
 
         // add newly created task to store
-        // case 'CREATE_TASK':
-        //     return { tasks: [...state.tasks, action.payload] }
-
-        // edit property of task that matches id
-        // case 'EDIT_TASK':
-        //     return {
-        //         // iterate through array of tasks
-        //         tasks: state.tasks.map(task => {
-        //             // if task's id matches
-        //             if (task.id === action.payload.id) {
-        //                 // return task with updated property
-        //                 return { ...task, ...action.payload.params }
-        //             }
-
-        //             // if id does not match return unmodified task
-        //             return task
-        //         })
-        //     }
-
-        // add newly created task to store
-        case 'CREATE_TASK_SUCCEEDED':
+        case 'CREATE_TASK_SUCCEEDED': {
             const { task } = action.payload
 
-            // get projects index from items array
-            const projectIndex = state.items.findIndex(
-                project => project.id === task.projectId
-            )
-
-            // save project in var
-            const project = state.items[projectIndex]
-
-            // add new task to projects array of tasks
-            const nextProject = {
-                ...project,
-                tasks: [...project.tasks, task]
+            const nextTasks = {
+                ...state.items,
+                [task.id]: task
             }
 
-            // return items array with updated projects array
-            // deletes project and adds nextProject in same index
             return {
                 ...state,
-                items: [
-                    ...state.items.slice(0, projectIndex),
-                    nextProject,
-                    ...state.items.slice(projectIndex + 1)
-                ]
+                items: nextTasks
             }
+        }
+
 
         // return updated list of tasks
         case 'EDIT_TASK_SUCCEEDED': {
@@ -129,12 +73,6 @@ export function projectsReducer(state = initialProjectsState, action) {
                 ]
             }
         }
-
-        case 'FILTER_TASKS':
-            return {
-                ...state,
-                searchTerm: action.payload.searchTerm
-            }
 
         // delete task with given id from store
         case 'DELETE_TASK_SUCCEEDED': {
@@ -177,20 +115,102 @@ export function projectsReducer(state = initialProjectsState, action) {
     }
 }
 
+// define initial state
+const initialProjectsState = {
+    items: {},
+    isLoading: false,
+    error: null,
+}
+
+// define how to handle action
+export function projectsReducer(state = initialProjectsState, action) {
+    // check action type
+    switch (action.type) {
+        case 'FETCH_PROJECTS_STARTED':
+            return {
+                ...state,
+                isLoading: true
+            }
+
+        case 'RECEIVE_ENTITIES': {
+            const { entities } = action.payload
+
+            if (entities && entities.projects) {
+                return {
+                    ...state,
+                    isLoading: false,
+                    items: entities.projects
+                }
+            }
+            return state
+        }
+
+        // add newly created task to store
+        case 'CREATE_TASK_SUCCEEDED': {
+            const { task } = action.payload
+
+            const project = state.items[task.projectId]
+            console.log(state.items[task.projectId])
+
+            return {
+                ...state,
+                items: {
+                    ...state.items,
+                    [task.projectId]: {
+                        ...project,
+                        tasks: [...project.tasks, task.id]
+                    }
+                }
+
+            }
+        }
+
+        default:
+            return state
+    }
+}
+
+const initialPageState = {
+    currentProjectId: null,
+    searchTerm: ""
+}
+
+export function pageReducer(state = initialPageState, action) {
+    switch (action.type) {
+        case 'SET_CURRENT_PROJECT_ID':
+            return {
+                ...state,
+                currentProjectId: action.payload.id
+            }
+
+        case 'FILTER_TASKS':
+
+            return {
+                ...state,
+                searchTerm: action.payload.searchTerm
+            }
+
+        default:
+            return state
+    }
+}
+
+export const getProjects = state => {
+    return Object.keys(state.projects.items).map(id => {
+        return state.projects.items[id]
+    })
+}
 
 const getTasksById = state => {
-    // return empty array if no project selected
-    if (!state.page.currentProjectId) {
+    const { currentProjectId } = state.page
+
+    if (!currentProjectId || !state.projects.items[currentProjectId]) {
         return []
     }
 
-    // find in projects object project with matching id
-    const currentProject = state.projects.items.find(project => {
-        return project.id === state.page.currentProjectId
-    })
+    const taskIds = state.projects.items[currentProjectId].tasks;
 
-    // return tasks from selected projected
-    return currentProject.tasks
+    return taskIds.map(id => state.tasks.items[id])
 }
 
 // return searchTerm from state
@@ -217,27 +237,3 @@ export const getGroupedAndFilteredTasks = createSelector(
     }
 )
 
-const initialPageState = {
-    currentProjectId: null,
-    searchTerm: ""
-}
-
-export function pageReducer(state = initialPageState, action) {
-    switch (action.type) {
-        case 'SET_CURRENT_PROJECT_ID':
-            return {
-                ...state,
-                currentProjectId: action.payload.id
-            }
-
-        case 'FILTER_TASKS':
-
-            return {
-                ...state,
-                searchTerm: action.payload.searchTerm
-            }
-
-        default:
-            return state
-    }
-}
