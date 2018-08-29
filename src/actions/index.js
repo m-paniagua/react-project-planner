@@ -16,13 +16,6 @@ function fetchProjectStarted(boards) {
     }
 }
 
-// function fetchProjectSucceeded(projects) {
-//     return {
-//         type: 'FETCH_PROJECTS_SUCCEEDED',
-//         payload: { projects }
-//     }
-// }
-
 function fetchProjectsFailed(err) {
     return {
         type: 'FETCH_PROJECTS_FAILED',
@@ -55,48 +48,6 @@ export function fetchProjects() {
             })
     }
 }
-
-// // add tasks to store after api call
-// export function fetchTasksSucceeded(tasks) {
-//     return {
-//         type: 'FETCH_TASKS_SUCCEEDED',
-//         payload: {
-//             tasks
-//         }
-//     }
-// }
-
-// export function fetchTasksFailed(error) {
-//     return {
-//         type: 'FETCH_TASKS_FAILED',
-//         payload: {
-//             error
-//         }
-//     }
-// }
-
-// function fetchTasksStarted() {
-//     return {
-//         type: 'FETCH_TASKS_STARTED'
-//     }
-// }
-
-// // make call to api
-// export function fetchTasks() {
-//     return dispatch => {
-//         dispatch(fetchTasksStarted())
-
-//         // make get request to api
-//         api.fetchTasks()
-//             .then(resp => {
-//                 dispatch(fetchTasksSucceeded(resp.data))
-//                 // throw new Error('Unable to fetch tasks!')
-//             })
-//             .catch(err => {
-//                 dispatch(fetchTasksFailed(err.message))
-//             })
-//     }
-// }
 
 // add newly created task to store
 export function createTaskSucceeded(task) {
@@ -132,10 +83,8 @@ export function editTaskSucceeded(task) {
 // change task of given id
 export function editTask(id, params = {}) {
     return (dispatch, getState) => {
-        // need current project id
-        const projectId = getState().page.currentProjectId
 
-        const task = getTaskById(getState().tasks.items, id, projectId)
+        const task = getState().tasks.items[id]
         const updatedTask = { ...task, ...params }
 
         api.editTask(id, updatedTask).then(resp => {
@@ -160,11 +109,11 @@ export function deleteTaskSucceded(task) {
     }
 }
 
-export function deleteTask(id) {
+export function deleteTask(task) {
     return dispatch => {
-        api.deleteTask(id)
+        api.deleteTask(task)
             .then(resp => {
-                dispatch(deleteTaskSucceded(id))
+                dispatch(deleteTaskSucceded(task))
             })
     }
 }
@@ -179,14 +128,14 @@ export function setCurrentProjectId(id) {
     }
 }
 
-function getTaskById(projects, id, pId) {
-    // find index of current project
-    const projectIndex = projects.findIndex(
-        project => project.id === pId
-    )
-    // return the task from array matches id
-    return projects[projectIndex].tasks.find(task => task.id === id)
-}
+// function getTaskById(projects, id, pId) {
+//     // find index of current project
+//     const projectIndex = projects.findIndex(
+//         project => project.id === pId
+//     )
+//     // return the task from array matches id
+//     return projects[projectIndex].tasks.find(task => task.id === id)
+// }
 
 // normalizr schema
 const taskSchema = new schema.Entity('tasks')

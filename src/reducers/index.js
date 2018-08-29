@@ -24,7 +24,8 @@ export function tasksReducer(state = initialTasksState, action) {
         }
 
         // add newly created task to store
-        case 'CREATE_TASK_SUCCEEDED': {
+        case 'CREATE_TASK_SUCCEEDED':
+        case 'EDIT_TASK_SUCCEEDED': {
             const { task } = action.payload
 
             const nextTasks = {
@@ -40,73 +41,28 @@ export function tasksReducer(state = initialTasksState, action) {
 
 
         // return updated list of tasks
-        case 'EDIT_TASK_SUCCEEDED': {
-            const { task } = action.payload
+        // case 'EDIT_TASK_SUCCEEDED': {
+        //     const { task } = action.payload
 
-            // find index of project containing task
-            const projectIndex = state.items.findIndex(
-                project => project.id === task.projectId
-            )
-            const project = state.items[projectIndex]
-
-            // find index in tasks array
-            const taskIndex = project.tasks.findIndex(
-                t => t.id === task.id
-            )
-
-            // delete old taks, add edited task to tasks array
-            const nextProject = {
-                ...project,
-                tasks: [
-                    ...project.tasks.slice(0, taskIndex),
-                    task,
-                    ...project.tasks.slice(taskIndex + 1)
-                ]
-            }
-
-            return {
-                ...state,
-                items: [
-                    ...state.items.slice(0, projectIndex),
-                    nextProject,
-                    ...state.items.slice(projectIndex + 1)
-                ]
-            }
-        }
+        //     return {
+        //         ...state,
+        //         items: {
+        //             ...state.items,
+        //             [task.id]: task
+        //         }
+        //     }
+        // }
 
         // delete task with given id from store
         case 'DELETE_TASK_SUCCEEDED': {
             const { task } = action.payload
 
-            // find index of project containing task
-            const projectIndex = state.items.findIndex(
-                project => project.id === task.projectId
-            )
+            const { [task.id.toString()]: del, ...newTasks } = state.items
+            console.log(newTasks)
 
-            const project = state.items[projectIndex]
-
-            // get task index
-            const taskIndex = project.tasks.findIndex(
-                t => t.id === task.id
-            )
-
-            // delete task from tasks array
-            const nextProject = {
-                ...project,
-                tasks: [
-                    ...project.tasks.slice(0, taskIndex),
-                    ...project.tasks.slice(taskIndex + 1)
-                ]
-            }
-
-            // return items array with updated project
             return {
                 ...state,
-                items: [
-                    ...state.items.slice(0, projectIndex),
-                    nextProject,
-                    ...state.items.slice(projectIndex + 1)
-                ]
+                items: newTasks
             }
         }
 
@@ -150,7 +106,6 @@ export function projectsReducer(state = initialProjectsState, action) {
             const { task } = action.payload
 
             const project = state.items[task.projectId]
-            console.log(state.items[task.projectId])
 
             return {
                 ...state,
@@ -162,6 +117,26 @@ export function projectsReducer(state = initialProjectsState, action) {
                     }
                 }
 
+            }
+        }
+
+        case 'DELETE_TASK_SUCCEEDED': {
+            const { task } = action.payload
+
+            // get project by id
+            const project = state.items[task.projectId]
+            // remove task from tasks array
+            const filterTasks = project.tasks.filter(index => index !== task.id)
+
+            return {
+                ...state,
+                items: {
+                    ...state.items,
+                    [task.projectId]: {
+                        ...project,
+                        tasks: filterTasks
+                    }
+                }
             }
         }
 
