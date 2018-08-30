@@ -38,14 +38,20 @@ export function fetchProjects() {
                 dispatch(receiveEntities(normalizedData))
 
                 // set default project on start
-                // if (!getState().page.currentProjectId) {
-                //     const defaultProjectId = projects[0].id
-                //     dispatch(setCurrentProjectId(defaultProjectId))
-                // }
+                if (!getState().page.currentProjectId) {
+                    const defaultProjectId = projects[0].id
+                    dispatch(setCurrentProjectId(defaultProjectId))
+                }
             })
             .catch(err => {
                 dispatch(fetchProjectsFailed(err))
             })
+    }
+}
+
+export function createTaskRequested() {
+    return {
+        type: 'CREATE_TASK_REQUESTED',
     }
 }
 
@@ -59,11 +65,12 @@ export function createTaskSucceeded(task) {
     }
 }
 // create task called with obj with title and description properties
-export function createTask({ title, description, status = 'Not Started' }) {
+export function createTask({ title, description, projectId, status = 'Not Started' }) {
     // post request to api
     return (dispatch, getState) => {
+        dispatch(createTaskRequested());
         // retrieve current project id from state
-        const projectId = getState().page.currentProjectId
+        // const projectId = getState().page.currentProjectId
 
         api.createTask({ title, description, status, projectId }).then(resp => {
             dispatch(createTaskSucceeded(resp.data))

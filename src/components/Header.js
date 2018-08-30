@@ -16,9 +16,9 @@ class Header extends Component {
                 <select
                     onChange={this.props.onCurrentProjectChange}
                     className="project-menu"
-                    defaultValue={-1}
+                // defaultValue={-1}
                 >
-                    <option value="-1" disabled>Select a project</option>
+                    {/* <option value="-1" disabled>Select a project</option> */}
                     {projectOptions}
                 </select>
             </div>

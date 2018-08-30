@@ -16,8 +16,12 @@ class App extends Component {
 
   onCreateTask = ({ title, description }) => {
     // dispatch action to store
-    // console.log('Project id: ' + this.props.currentProjectID)
-    this.props.dispatch(createTask({ title, description }))
+    this.props.dispatch(createTask({
+      title,
+      description,
+      projectId: this.props.currentProjectId
+    })
+    )
   }
 
   onStatusChange = (id, status) => {
@@ -73,7 +77,7 @@ function mapStateToProps(state) {
   return {
     tasks: getGroupedAndFilteredTasks(state),
     projects: getProjects(state),
-    // currentProjectID: getCurrentProjectId(state),
+    currentProjectId: state.page.currentProjectId,
     isLoading,
     error
   }

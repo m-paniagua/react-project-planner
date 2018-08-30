@@ -96,12 +96,12 @@ class TasksPage extends Component {
                         onChange={this.onSearch}
                         type="text"
                         placeholder="Search..."
-                        disabled={this.state.currenProjectId ? false : true}
+                    // disabled={this.state.currenProjectId ? false : true}
                     />
                     <button
                         className="button button-default"
                         onClick={this.toggleForm}
-                        disabled={this.state.currenProjectId ? false : true}
+                    // disabled={this.state.currenProjectId ? false : true}
                     >
                         <FontAwesomeIcon icon={faPlusCircle} /> New
                 </button>
